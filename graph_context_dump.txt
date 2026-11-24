@@ -1,0 +1,130 @@
+============================================================
+q01 На що вплине ДТП INC-317?
+mode: impact | entities: ['INC_317'] | edges: 3
+[g1] INC_317 (TrafficAccident) -CAUSES-> CONG_881 (TrafficCongestion)
+[g2] CONG_881 (TrafficCongestion) -AFFECTS_ROUTE-> R_OPT_3 (Route)
+[g3] R_OPT_3 (Route) -RECOMMENDED_TO-> DRV_9041 (Driver)
+============================================================
+q02 Які затори спричинила ДТП INC-317?
+mode: impact | entities: ['INC_317'] | edges: 3
+[g1] INC_317 (TrafficAccident) -CAUSES-> CONG_881 (TrafficCongestion)
+[g2] CONG_881 (TrafficCongestion) -AFFECTS_ROUTE-> R_OPT_3 (Route)
+[g3] R_OPT_3 (Route) -RECOMMENDED_TO-> DRV_9041 (Driver)
+============================================================
+q03 Які маршрути зачепить ДТП INC-317?
+mode: impact | entities: ['INC_317'] | edges: 3
+[g1] INC_317 (TrafficAccident) -CAUSES-> CONG_881 (TrafficCongestion)
+[g2] CONG_881 (TrafficCongestion) -AFFECTS_ROUTE-> R_OPT_3 (Route)
+[g3] R_OPT_3 (Route) -RECOMMENDED_TO-> DRV_9041 (Driver)
+============================================================
+q04 Кого сповіщають про ДТП INC-317 і які рекомендації вона спричиняє?
+mode: impact | entities: ['INC_317'] | edges: 3
+[g1] INC_317 (TrafficAccident) -CAUSES-> CONG_881 (TrafficCongestion)
+[g2] CONG_881 (TrafficCongestion) -AFFECTS_ROUTE-> R_OPT_3 (Route)
+[g3] R_OPT_3 (Route) -RECOMMENDED_TO-> DRV_9041 (Driver)
+============================================================
+q05 Що залежить від COLLECT_1?
+mode: impact | entities: ['COLLECT_1'] | edges: 8
+[g1] COLLECT_1 (DataProcess) -SUPPLIES_DATA_TO-> ANALYSIS_1 (DataProcess)
+[g2] ANALYSIS_1 (DataProcess) -IS_BASIS_FOR-> CONTROL_1 (DataProcess)
+[g3] ANALYSIS_1 (DataProcess) -IS_BASIS_FOR-> PLANNING_1 (DataProcess)
+[g4] CONTROL_1 (DataProcess) -ADJUSTS-> TL_12_A (TrafficLight)
+[g5] CONTROL_1 (DataProcess) -NOTIFIES-> AMB_01 (Vehicle)
+[g6] PLANNING_1 (DataProcess) -PRODUCES_ROUTE-> R_OPT_3 (Route)
+[g7] PLANNING_1 (DataProcess) -RECOMMENDS_TO-> DRV_9041 (Driver)
+[g8] R_OPT_3 (Route) -RECOMMENDED_TO-> DRV_9041 (Driver)
+============================================================
+q06 Куди процес COLLECT_1 передає дані?
+mode: neighborhood | entities: ['COLLECT_1'] | edges: 1
+[g1] COLLECT_1 (DataProcess) -SUPPLIES_DATA_TO-> ANALYSIS_1 (DataProcess)
+============================================================
+q07 Які датчики пов'язані з перехрестям INT-LV-12?
+mode: neighborhood | entities: ['INT_LV_12'] | edges: 10
+[g1] BC1234AA (Vehicle) -CROSSES-> INT_LV_12 (Intersection)
+[g2] BC4444KA (Vehicle) -CROSSES-> INT_LV_12 (Intersection) [synthetic]
+[g3] CAM_042 (SensorDevice) -MOUNTED_ON-> INT_LV_12 (Intersection)
+[g4] R_OPT_5 (Route) -PASSES_THROUGH-> INT_LV_12 (Intersection)
+[g5] SEC_ST_07 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g6] SEC_ST_11 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g7] SEC_ST_12 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g8] SEC_ST_13 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g9] SEC_ST_37 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g10] TL_12_A (TrafficLight) -REGULATES-> INT_LV_12 (Intersection)
+============================================================
+q08 Які світлофори розташовані на перехресті INT-LV-12?
+mode: neighborhood | entities: ['INT_LV_12'] | edges: 10
+[g1] BC1234AA (Vehicle) -CROSSES-> INT_LV_12 (Intersection)
+[g2] BC4444KA (Vehicle) -CROSSES-> INT_LV_12 (Intersection) [synthetic]
+[g3] CAM_042 (SensorDevice) -MOUNTED_ON-> INT_LV_12 (Intersection)
+[g4] R_OPT_5 (Route) -PASSES_THROUGH-> INT_LV_12 (Intersection)
+[g5] SEC_ST_07 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g6] SEC_ST_11 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g7] SEC_ST_12 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g8] SEC_ST_13 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g9] SEC_ST_37 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection) [synthetic]
+[g10] TL_12_A (TrafficLight) -REGULATES-> INT_LV_12 (Intersection)
+============================================================
+q09 Які ділянки доріг пов'язані з вулицею Городоцькою?
+mode: neighborhood | entities: ['SEC_ST_07', 'SEC_ST_24', 'SEC_ST_35'] | edges: 14
+[g1] AA5821KP (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment)
+[g2] AMB_06 (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment) [synthetic]
+[g3] BC1234AA (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment)
+[g4] BC4296HP (Vehicle) -MOVES_ALONG-> SEC_ST_24 (RoadSegment) [synthetic]
+[g5] CONG_881 (TrafficCongestion) -OCCURS_ON-> SEC_ST_07 (RoadSegment)
+[g6] INC_317 (TrafficAccident) -OCCURS_ON-> SEC_ST_07 (RoadSegment)
+[g7] R_OPT_3 (Route) -PASSES_THROUGH-> SEC_ST_07 (RoadSegment)
+[g8] R_OPT_6 (Route) -PASSES_THROUGH-> SEC_ST_07 (RoadSegment) [synthetic]
+[g9] R_OPT_8 (Route) -PASSES_THROUGH-> SEC_ST_35 (RoadSegment) [synthetic]
+[g10] SEC_ST_07 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g11] SEC_ST_24 (RoadSegment) -CONNECTS_TO-> INT_LV_31 (Intersection) [synthetic]
+[g12] SEC_ST_24 (RoadSegment) -CONNECTS_TO-> INT_LV_32 (Intersection) [synthetic]
+[g13] SEC_ST_35 (RoadSegment) -CONNECTS_TO-> INT_LV_34 (Intersection) [synthetic]
+[g14] SEC_ST_35 (RoadSegment) -CONNECTS_TO-> INT_LV_36 (Intersection) [synthetic]
+============================================================
+q10 Які ділянки та перехрестя пов'язані з вулицею Зеленою?
+mode: neighborhood | entities: ['SEC_ST_18', 'SEC_ST_22', 'SEC_ST_25', 'SEC_ST_29'] | edges: 24
+[g1] AMB_03 (Vehicle) -MOVES_ALONG-> SEC_ST_29 (RoadSegment) [synthetic]
+[g2] AMB_08 (Vehicle) -MOVES_ALONG-> SEC_ST_25 (RoadSegment) [synthetic]
+[g3] BC4111IT (Vehicle) -MOVES_ALONG-> SEC_ST_18 (RoadSegment) [synthetic]
+[g4] BC4148IT (Vehicle) -MOVES_ALONG-> SEC_ST_18 (RoadSegment) [synthetic]
+[g5] BC4629KA (Vehicle) -MOVES_ALONG-> SEC_ST_22 (RoadSegment) [synthetic]
+[g6] CONG_885 (TrafficCongestion) -OCCURS_ON-> SEC_ST_22 (RoadSegment) [synthetic]
+[g7] CONG_891 (TrafficCongestion) -OCCURS_ON-> SEC_ST_18 (RoadSegment) [synthetic]
+[g8] CONG_893 (TrafficCongestion) -OCCURS_ON-> SEC_ST_25 (RoadSegment) [synthetic]
+[g9] INC_321 (TrafficAccident) -OCCURS_ON-> SEC_ST_22 (RoadSegment) [synthetic]
+[g10] INC_327 (TrafficAccident) -OCCURS_ON-> SEC_ST_18 (RoadSegment) [synthetic]
+[g11] INC_329 (TrafficAccident) -OCCURS_ON-> SEC_ST_25 (RoadSegment) [synthetic]
+[g12] LOOP_112 (SensorDevice) -MOUNTED_ON-> SEC_ST_29 (RoadSegment) [synthetic]
+[g13] R_OPT_12 (Route) -PASSES_THROUGH-> SEC_ST_18 (RoadSegment) [synthetic]
+[g14] R_OPT_17 (Route) -PASSES_THROUGH-> SEC_ST_29 (RoadSegment) [synthetic]
+[g15] R_OPT_7 (Route) -PASSES_THROUGH-> SEC_ST_29 (RoadSegment) [synthetic]
+[g16] R_OPT_9 (Route) -PASSES_THROUGH-> SEC_ST_18 (RoadSegment) [synthetic]
+[g17] SEC_ST_18 (RoadSegment) -CONNECTS_TO-> INT_LV_25 (Intersection) [synthetic]
+[g18] SEC_ST_18 (RoadSegment) -CONNECTS_TO-> INT_LV_26 (Intersection) [synthetic]
+[g19] SEC_ST_22 (RoadSegment) -CONNECTS_TO-> INT_LV_29 (Intersection) [synthetic]
+[g20] SEC_ST_22 (RoadSegment) -CONNECTS_TO-> INT_LV_30 (Intersection) [synthetic]
+[g21] SEC_ST_25 (RoadSegment) -CONNECTS_TO-> INT_LV_32 (Intersection) [synthetic]
+[g22] SEC_ST_25 (RoadSegment) -CONNECTS_TO-> INT_LV_33 (Intersection) [synthetic]
+[g23] SEC_ST_29 (RoadSegment) -CONNECTS_TO-> INT_LV_36 (Intersection) [synthetic]
+[g24] SEC_ST_29 (RoadSegment) -CONNECTS_TO-> INT_LV_37 (Intersection) [synthetic]
+============================================================
+q11 Які пристрої постачають дані для керування світлофорами на вулиці Городоцькій?
+mode: neighborhood | entities: ['SEC_ST_07', 'SEC_ST_24', 'SEC_ST_35'] | edges: 14
+[g1] AA5821KP (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment)
+[g2] AMB_06 (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment) [synthetic]
+[g3] BC1234AA (Vehicle) -MOVES_ALONG-> SEC_ST_07 (RoadSegment)
+[g4] BC4296HP (Vehicle) -MOVES_ALONG-> SEC_ST_24 (RoadSegment) [synthetic]
+[g5] CONG_881 (TrafficCongestion) -OCCURS_ON-> SEC_ST_07 (RoadSegment)
+[g6] INC_317 (TrafficAccident) -OCCURS_ON-> SEC_ST_07 (RoadSegment)
+[g7] R_OPT_3 (Route) -PASSES_THROUGH-> SEC_ST_07 (RoadSegment)
+[g8] R_OPT_6 (Route) -PASSES_THROUGH-> SEC_ST_07 (RoadSegment) [synthetic]
+[g9] R_OPT_8 (Route) -PASSES_THROUGH-> SEC_ST_35 (RoadSegment) [synthetic]
+[g10] SEC_ST_07 (RoadSegment) -CONNECTS_TO-> INT_LV_12 (Intersection)
+[g11] SEC_ST_24 (RoadSegment) -CONNECTS_TO-> INT_LV_31 (Intersection) [synthetic]
+[g12] SEC_ST_24 (RoadSegment) -CONNECTS_TO-> INT_LV_32 (Intersection) [synthetic]
+[g13] SEC_ST_35 (RoadSegment) -CONNECTS_TO-> INT_LV_34 (Intersection) [synthetic]
+[g14] SEC_ST_35 (RoadSegment) -CONNECTS_TO-> INT_LV_36 (Intersection) [synthetic]
+============================================================
+q12 Які маршрути залежать від вулиці Зеленої?
+mode: impact | entities: ['SEC_ST_18', 'SEC_ST_22', 'SEC_ST_25', 'SEC_ST_29'] | edges: 0
+(порожньо)

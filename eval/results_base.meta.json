@@ -1,0 +1,12 @@
+{
+ "tag": "base",
+ "model": "openai/gpt-oss-20b",
+ "prompt": "rag_v1",
+ "top_k": 5,
+ "strict_citations": true,
+ "use_graph": true,
+ "retrieval_only": false,
+ "judge": "api",
+ "n": 39,
+ "date": "2026-11-22 22:50"
+}

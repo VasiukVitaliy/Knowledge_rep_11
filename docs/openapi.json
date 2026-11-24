@@ -1,0 +1,504 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Domain Knowledge Hub: RAG-чат",
+  "description": "RAG-чат за корпусом (BM25 + dense + reranker) і графом знань Neo4j. Автентифікація: заголовок X-API-Key; роль (public/analyst) визначається ключем.",
+  "version": "1.0"
+ },
+ "paths": {
+  "/health": {
+   "get": {
+    "tags": [
+     "service"
+    ],
+    "summary": "Health",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ask": {
+   "post": {
+    "tags": [
+     "chat"
+    ],
+    "summary": "Ask",
+    "operationId": "ask_ask_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AskRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AskResponse"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Немає або невірний API-ключ",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Невалідний вхід (Pydantic): порожнє/задовге питання, зайві поля, не-UUID"
+     },
+     "403": {
+      "description": "Роль не має доступу до цього ресурсу",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Перевищено ліміт запитів (заголовок Retry-After)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ]
+   }
+  },
+  "/sources/{source_id}": {
+   "get": {
+    "tags": [
+     "chat"
+    ],
+    "summary": "Get Source",
+    "operationId": "get_source_sources__source_id__get",
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "source_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 128,
+       "title": "Source Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SourceDetail"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Немає або невірний API-ключ",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Невалідний вхід (Pydantic): порожнє/задовге питання, зайві поля, не-UUID"
+     },
+     "403": {
+      "description": "Роль не має доступу до цього ресурсу",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Перевищено ліміт запитів (заголовок Retry-After)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Джерела з таким id немає",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AskRequest": {
+    "properties": {
+     "user_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "User Id",
+      "description": "UUID сесії діалогу; якщо не вказано, створюється новий"
+     },
+     "prompt": {
+      "type": "string",
+      "maxLength": 1000,
+      "minLength": 3,
+      "title": "Prompt",
+      "description": "Питання користувача"
+     },
+     "use_graph": {
+      "type": "boolean",
+      "title": "Use Graph",
+      "description": "false = режим «лише текст», true = «текст + підграф»",
+      "default": true
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "prompt"
+    ],
+    "title": "AskRequest"
+   },
+   "AskResponse": {
+    "properties": {
+     "user_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "User Id"
+     },
+     "role": {
+      "type": "string",
+      "title": "Role"
+     },
+     "answer": {
+      "type": "string",
+      "title": "Answer"
+     },
+     "sources": {
+      "items": {
+       "$ref": "#/components/schemas/SourceInfo"
+      },
+      "type": "array",
+      "title": "Sources"
+     },
+     "graph": {
+      "$ref": "#/components/schemas/GraphInfo"
+     },
+     "usage": {
+      "$ref": "#/components/schemas/Usage"
+     },
+     "latency_ms": {
+      "type": "number",
+      "title": "Latency Ms"
+     },
+     "citations_valid": {
+      "type": "boolean",
+      "title": "Citations Valid",
+      "description": "false, якщо модель цитувала id поза наданим контекстом (їх прибрано)",
+      "default": true
+     },
+     "invalid_citations": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Invalid Citations",
+      "default": []
+     }
+    },
+    "type": "object",
+    "required": [
+     "user_id",
+     "role",
+     "answer",
+     "sources",
+     "graph",
+     "usage",
+     "latency_ms"
+    ],
+    "title": "AskResponse"
+   },
+   "ErrorOut": {
+    "properties": {
+     "detail": {
+      "type": "string",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "required": [
+     "detail"
+    ],
+    "title": "ErrorOut"
+   },
+   "GraphInfo": {
+    "properties": {
+     "used": {
+      "type": "boolean",
+      "title": "Used"
+     },
+     "mode": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mode"
+     },
+     "entities": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Entities",
+      "default": []
+     },
+     "facts": {
+      "type": "string",
+      "title": "Facts",
+      "description": "Факти підграфа з id виду [g1]",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "used"
+    ],
+    "title": "GraphInfo"
+   },
+   "SourceDetail": {
+    "properties": {
+     "chunk_id": {
+      "type": "string",
+      "title": "Chunk Id"
+     },
+     "doc_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Doc Id"
+     },
+     "title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "section": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Section"
+     },
+     "type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Type"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date"
+     },
+     "sensitivity": {
+      "type": "string",
+      "title": "Sensitivity"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     }
+    },
+    "type": "object",
+    "required": [
+     "chunk_id",
+     "sensitivity",
+     "text"
+    ],
+    "title": "SourceDetail"
+   },
+   "SourceInfo": {
+    "properties": {
+     "chunk_id": {
+      "type": "string",
+      "title": "Chunk Id"
+     },
+     "doc_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Doc Id"
+     },
+     "title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "section": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Section"
+     },
+     "type": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Type"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date"
+     },
+     "sensitivity": {
+      "type": "string",
+      "title": "Sensitivity"
+     }
+    },
+    "type": "object",
+    "required": [
+     "chunk_id",
+     "sensitivity"
+    ],
+    "title": "SourceInfo"
+   },
+   "Usage": {
+    "properties": {
+     "tokens_in": {
+      "type": "integer",
+      "title": "Tokens In",
+      "default": 0
+     },
+     "tokens_out": {
+      "type": "integer",
+      "title": "Tokens Out",
+      "default": 0
+     }
+    },
+    "type": "object",
+    "title": "Usage"
+   }
+  },
+  "securitySchemes": {
+   "APIKeyHeader": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "X-API-Key"
+   }
+  }
+ }
+}

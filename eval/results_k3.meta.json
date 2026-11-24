@@ -1,0 +1,12 @@
+{
+ "tag": "k3",
+ "model": "openai/gpt-oss-20b",
+ "prompt": "rag_v1",
+ "top_k": 3,
+ "strict_citations": true,
+ "use_graph": true,
+ "retrieval_only": false,
+ "judge": "none",
+ "n": 39,
+ "date": "2026-11-22 23:02"
+}
